@@ -1,0 +1,34 @@
+import streamlit as st
+from PIL import Image
+import style
+
+st.title("Pytorch Style Transfer")
+
+img = st.sidebar.selectbox(
+    'Select Image',
+    ('amber.jpg', 'van_gogh.jpg', 'greece.jpg', 'mona_lisa.jpg')
+)
+
+style_name = st.sidebar.selectbox(
+    'Select Style',
+    ('candy', 'mosaic', 'rain_princess', 'udnie','bike_style','nature_style', 'styleExample')
+)
+
+
+model= "saved_models/" + style_name + ".pth"
+input_image = "images/content-images/" + img
+output_image = "images/output-images/" + style_name + "-" + img
+
+st.write('### Source image:')
+image = Image.open(input_image)
+st.image(image, width=400) # image: numpy array
+
+clicked = st.button('Stylize')
+
+if clicked:
+    model = style.load_model(model)
+    style.stylize(model, input_image, output_image)
+
+    st.write('### Output image:')
+    image = Image.open(output_image)
+    st.image(image, width=400)
